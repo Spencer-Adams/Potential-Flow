@@ -150,10 +150,12 @@ module Potential_flows
                 geom_vec_2 = this%calc_geometry(x_values_2(j))
                 point_up_2 = [x_values_2(j), geom_vec_2(1)]
                 point_low_2 = [x_values_2(j), geom_vec_2(2)]
-                surface_tan_up_2 = this%calc_surf_tan(point_up)jh
+                surface_tan_up_2 = this%calc_surf_tan(point_up_2)
+                surface_tan_low_2 = this%calc_surf_tan(point_low_2)
+                aft_stag = [4, 5]
             
             end do 
-
+            stags = [forward_stag, aft_stag]
         end function stagnation  
 
     ! def stagnation(self): 
