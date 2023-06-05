@@ -152,8 +152,11 @@ module Potential_flows
                 point_low_2 = [x_values_2(j), geom_vec_2(2)]
                 surface_tan_up_2 = this%calc_surf_tan(point_up_2)
                 surface_tan_low_2 = this%calc_surf_tan(point_low_2)
-                aft_stag = [4, 5]
-            
+                if (surface_tan_up_2(1) <= 0.001 .and. surface_tan_low_2(2) >= 0.001) then 
+                    aft_stag = [x_values_2(j), geom_vec_2(1)]
+                else if (surface_tan_low_2(2) <= 0.001 .and. surface_tan_up_2(1) >= 0.001) then
+                    aft_stag = [x_values_2(j), geom_vec_2(2)]
+                end if 
             end do 
             stags = [forward_stag, aft_stag]
         end function stagnation  
