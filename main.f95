@@ -3,18 +3,15 @@ program main
     use Potential_flows
     implicit none
     type(cylinder) :: my_cyl
-    real :: upper_surface, lower_surface, camber 
-    real :: cylinder_radius, x_start, x_lower_limit, x_upper_limit, delta_s, delta_y  
-    real :: x_value, x_leading_edge, x_trailing_edge, x_cent, vel_inf, alpha, vortex_strength
-    real :: number_pi
-    real, dimension(:),allocatable :: ARB_POINT 
-    integer :: direction, n_lines  ! direction will be used later when figuring out how to integrate from the leading edge stagnation line.
+    real :: x_value
+    real, dimension(:),allocatable :: ARB_POINT, other_point
+    integer :: direction ! direction will be used later when figuring out how to integrate from the leading edge stagnation line.
 
  ! Initialize variables (including json)
 
     ! |//////////////////////////////////////////////////////|
     ! |              FIGURE A WAY TO PARSE JSONS             |
-    ! |   FOR NOW, JSON FILE VALUES CAN BE VIEWED BELOW      |       
+    ! |   FOR NOW, JSON FILE VALUES CAN BE VIEWED BELOW      |      
     ! |//////////////////////////////////////////////////////|
 
     my_cyl%cylinder_radius = 2.0
@@ -23,7 +20,7 @@ program main
     my_cyl%x_upper_limit   = 5.0
     my_cyl%delta_s         = 0.01    
     my_cyl%delta_y         = 0.4
-    
+   
     my_cyl%x_leading_edge  = -2.0
     my_cyl%x_trailing_edge = 2.0
     my_cyl%x_cent          = 0.0
@@ -36,32 +33,31 @@ program main
 
     x_value         = 1.5
     ARB_POINT       = [0.0 , 2.5]
-    ! direction = 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! THIS IS A PLACEHOLDER VALUE FOR NOW. 
-    
+    direction = 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! THIS IS A PLACEHOLDER VALUE FOR NOW. USE TO DEBUG rk4  
+    other_point     = [-4.8, 2.5]
     ! |//////////////////////////////////////////////////////|
     ! |              FIGURE A WAY TO PARSE JSONS             |
-    ! |   FOR NOW, JSON FILE VALUES CAN BE VIEWED ABOVE      |       
+    ! |   FOR NOW, JSON FILE VALUES CAN BE VIEWED ABOVE      |      
     ! |//////////////////////////////////////////////////////|
 
-    write(*,*) "Cylinder radius:", cylinder_radius
-    write(*,*) "Starting x:", x_start
-    write(*,*) "x_min on plot:", x_lower_limit
-    write(*,*) "x_max on plot:", x_upper_limit
-    write(*,*) "Space step:", delta_s
-    write(*,*) "Number of streamlines:", n_lines                  
-    write(*,*) "Y distance between lines at starting x:", delta_y
-    write(*,*) "Leading edge x location:", x_leading_edge 
-    write(*,*) "Trailing edge x location:", x_trailing_edge
-    write(*,*) "x center of the geometry:", x_cent
-    write(*,*) "V infinity:", vel_inf
-    write(*,*) "Angle of attack:", alpha
-    write(*,*) "Vortex strength:", vortex_strength
+    write(*,*) "Cylinder radius:", my_cyl%cylinder_radius
+    write(*,*) "Starting x:", my_cyl%x_start
+    write(*,*) "x_min on plot:", my_cyl%x_lower_limit
+    write(*,*) "x_max on plot:", my_cyl%x_upper_limit
+    write(*,*) "Space step:", my_cyl%delta_s
+    write(*,*) "Number of streamlines:", my_cyl%n_lines                  
+    write(*,*) "Y distance between lines at starting x:", my_cyl%delta_y
+    write(*,*) "Leading edge x location:", my_cyl%x_leading_edge
+    write(*,*) "Trailing edge x location:", my_cyl%x_trailing_edge
+    write(*,*) "x center of the geometry:", my_cyl%x_cent
+    write(*,*) "V infinity:", my_cyl%vel_inf
+    write(*,*) "Angle of attack:", my_cyl%alpha
+    write(*,*) "Vortex strength:", my_cyl%vortex_strength
     write(*,*) "x_value:", x_value
     write(*,*) "ARB_POINT:", ARB_POINT
 
-    
-    write(*,*) "[Upper, Lower, Camber]: ", my_cyl%calc_geometry(x_value) ! call is only used for subroutines. 
-    
+    write(*,*) "[Upper, Lower, Camber]: ", my_cyl%calc_geometry(x_value) ! call is only used for subroutines.
+   
     call my_cyl%normal_vec(x_value)
     write(*,*) "Upper unit normal vector at x_value:", my_cyl%unit_normal_upper
     write(*,*) "Lower unit normal vector at x_value:", my_cyl%unit_normal_lower
@@ -75,10 +71,17 @@ program main
     write(*,*) "[Upper_surf_tan_vel, Lower_surf_tan_vel]: ", my_cyl%calc_surf_tan(ARB_POINT)
 
     write(*,*) "Vel norm by mag: ", my_cyl%calc_vel_norm(ARB_POINT)
-    
-    ! call my_cyl%stag()
-    ! write(*,*) "Stagnation points: ", my_cyl%stagnation 
+   
+    write(*,*) "Cylinder Stagnation Points: ", my_cyl%calc_stag()
 
-end program main 
+    write(*,*) "Rk4 next step: ", my_cyl%calc_rk4(ARB_POINT, 1)
+
+    write(*,*) "Hey Josh"
+
+    write(*,*) "Arb_point", ARB_POINT
+
+    write(*, '(1(2F10.2))')  my_cyl%calc_streamline(ARB_POINT)
+
+end program main
 
 
