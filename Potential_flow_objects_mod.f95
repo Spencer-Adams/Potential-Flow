@@ -26,7 +26,8 @@ module Potential_flows
         subroutine normal(this, x)
             ! This subroutine takes in an x value, and spits out the normal vectors at the surface of the cylinder at that x value.
             implicit none 
-            real :: x, angle_up, angle_low
+            real :: angle_up, angle_low
+            real, intent(in) :: x
             real, dimension(:), allocatable :: geometry_vec
             class(cylinder),intent(inout) :: this
             geometry_vec = this%calc_geometry(x)
@@ -39,7 +40,8 @@ module Potential_flows
         subroutine tangent(this, x)
             ! This subroutine takes in an x value, and spits out the tangent vectors at the surface of the cylinder at that x value.
             implicit none 
-            real :: x, angle_up, angle_low
+            real :: angle_up, angle_low
+            real, intent(in) :: x
             real, dimension(:), allocatable :: geometry_vec
             class(cylinder),intent(inout) :: this
             geometry_vec = this%calc_geometry(x)
@@ -51,7 +53,7 @@ module Potential_flows
 
         function geometry(this, x) result(geometry_vec)
             implicit none
-            real :: x
+            real, intent(in) :: x
             real :: camber, upper_surface, lower_surface
             real, dimension(:), allocatable :: geometry_vec
             class(cylinder), intent(inout) :: this
@@ -65,7 +67,8 @@ module Potential_flows
         ! This function turns a cylindrical velocity at a point into a cartesian velocity at that point.
             implicit none 
             real :: angle, r
-            real,dimension(:),allocatable :: point, vel_cart  
+            real,dimension(:),allocatable :: vel_cart 
+            real,dimension(:),allocatable, intent(in) :: point 
             class(cylinder),intent(inout) :: this
 
             angle = atan2(point(2), point(1))
@@ -82,7 +85,8 @@ module Potential_flows
         function surf_tan_vel(this, point) result(tan_vel_list)
         ! This function finds the tangent velocity at a point. This will help with finding the stagnation points in the stagnation subroutine
             implicit none
-            real, dimension(:), allocatable :: point, tan_vel_list, vel_cart
+            real, dimension(:), allocatable :: tan_vel_list, vel_cart
+            real, dimension(:), allocatable, intent(in) :: point
             class(cylinder), intent(inout) :: this
             real :: tan_vel_up, tan_vel_low
             ! Call calc_vel and tangent_vec subroutines to populate the required arrays
@@ -96,7 +100,7 @@ module Potential_flows
         function magnitude(vector) result(mag)
             implicit none 
             real :: mag
-            real, dimension(:), allocatable :: vector
+            real, dimension(:), allocatable, intent(in) :: vector
             mag = sqrt(vector(1)**2 + vector(2)**2)
         end function magnitude 
 
@@ -104,7 +108,8 @@ module Potential_flows
         ! This subroutine simply takes a point, and returns the unit velocity vector at that point
             implicit none
             real ::  mag
-            real, dimension(:), allocatable :: point, velocity_at_point, vel_norm
+            real, dimension(:), allocatable :: velocity_at_point, vel_norm
+            real, dimension(:), allocatable, intent(in) :: point
             class(cylinder), intent(inout) :: this  
             velocity_at_point = this%calc_vel(point)
             mag = magnitude(velocity_at_point)
@@ -113,8 +118,10 @@ module Potential_flows
 
         function linspace(x_start, x_end, x_len) result(x)
             real, dimension(:), allocatable :: x
-            real :: x_start, x_end, dx
-            integer :: x_len, i
+            real :: dx
+            real, intent(in) :: x_start, x_end
+            integer :: i
+            integer, intent(in) :: x_len
             dx = (x_end-x_start)/(x_len-1)
             allocate(x(1:x_len))
             x = [(x_start + ((i-1)*dx), i=1, x_len)]    
@@ -166,8 +173,9 @@ module Potential_flows
             implicit none
             real, dimension(:), allocatable :: k2_val, k3_val, k4_val
             real, dimension(:), allocatable :: point_new, k1, k2
-            real, dimension(:), allocatable :: k3, k4, point
-            integer :: direction
+            real, dimension(:), allocatable :: k3, k4 
+            real, dimension(:), allocatable, intent(in) :: point
+            integer, intent(in) :: direction
             class(cylinder), intent(inout) :: this
             k1 = this%calc_vel_norm(point)
             k2_val = (point+((direction*this%delta_s)/2)*k1)
@@ -183,18 +191,20 @@ module Potential_flows
             implicit none 
             real :: stopper_1, stopper_2
             logical :: stopper
-            integer :: direction, n, i  
+            integer :: direction, i  
             real, dimension(:), allocatable :: point_new
-            real, dimension(:), allocatable :: point
+            real, dimension(:), allocatable, intent(inout) :: point
             real, dimension(:,:), allocatable :: streamline_array
             class(cylinder), intent(inout) :: this
-            ! write(*,*)  "Point", point
+            ! write(*,*)  "Point"
             if (point(1) >= this%x_leading_edge - 0.001 .and. point(1) <= this%x_cent - 0.001) then 
                 direction = -1
             else 
                 direction = 1
             end if
             allocate(streamline_array(500,2))
+            allocate(point_new(2))
+            ! allocate(point(2))
             stopper_1 = this%x_upper_limit - 0.001
             stopper_2 = this%x_lower_limit + 0.001    !!!!!!!!!!! why will this not work? please just why?
             i = 1

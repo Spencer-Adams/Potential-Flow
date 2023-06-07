@@ -32,6 +32,7 @@ program main
     my_cyl%n_lines  = 20
 
     x_value         = 1.5
+    ! allocate(ARB_POINT(2))
     ARB_POINT       = [0.0 , 2.5]
     direction = 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! THIS IS A PLACEHOLDER VALUE FOR NOW. USE TO DEBUG rk4  
     other_point     = [-4.8, 2.5]
@@ -76,9 +77,7 @@ program main
 
     write(*,*) "Rk4 next step: ", my_cyl%calc_rk4(ARB_POINT, 1)
 
-    write(*,*) "Hey Josh"
-
-    write(*,*) "Arb_point", ARB_POINT
+    ! write(*,*) "Arb_point", ARB_POINT
 
     write(*, '(1(2F10.2))')  my_cyl%calc_streamline(ARB_POINT)
 
