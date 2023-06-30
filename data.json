@@ -1,0 +1,6 @@
+{
+"plot_points": ["output_geom_values.csv",
+               "output_stag_streamlines.csv",
+               "output_streamlines_upper.csv",
+               "output_streamlines_lower.csv"]
+}

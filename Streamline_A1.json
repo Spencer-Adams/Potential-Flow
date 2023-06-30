@@ -1,0 +1,20 @@
+{
+    "geometry": {"cylinder_radius" :2.0
+    },
+    "plot" : {
+        "x_start" : -5.0,
+        "x_lower_limit" : -5.0,
+        "x_upper_limit" : 5.0,
+        "delta_s" : 0.01,   
+        "n_lines" : 20,
+        "delta_y" : 0.4,
+        "x_leading_edge" : -2.0,
+        "x_trailing_edge" : 2.0,
+        "x_cent" : 0.0
+    },
+    "Operating" : {
+        "vel_inf" : 10.0,
+        "alpha[deg]" : 15.0,
+        "vortex_strength" : 80.0
+    }
+}
