@@ -418,6 +418,7 @@ module Potential_flows
         end function upper_streamline_values
 
         function lower_streamline_values(this) result(streamline_vals)
+        ! This function traces streamlines below the stagnation streamlines using the streamline function. 
             implicit none 
             integer :: i, j
             real :: y, q, neg_delta_y 
