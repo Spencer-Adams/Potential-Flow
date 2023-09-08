@@ -47,7 +47,7 @@ program main
 
     runtime = real(end_count - start_count)/count_rate
 
-    write(*,*) "Fortran_calculations_time:", runtime, "s"
+    write(*,*) "Fortran__cylinder_calculations_time:", runtime, "s"
 
 end program main
 

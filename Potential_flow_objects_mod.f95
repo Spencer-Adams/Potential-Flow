@@ -23,13 +23,11 @@ module Potential_flows
         procedure :: calc_streamline => streamline
         procedure :: calc_upper_stream_values => upper_streamline_values
         procedure :: calc_lower_stream_values => lower_streamline_values
-
-        end type cylinder 
+    end type cylinder 
    
     ! Here are the functions and subroutines 
 
     contains
-
         function geometry(this, x) result(geometry_vec)
             ! This function returns the y values of the upper surf, lower surf, and camber at given x inputs
             implicit none
@@ -55,7 +53,7 @@ module Potential_flows
             angle_up = atan2(geometry_vec(1), x)
             angle_low = atan2(geometry_vec(2), x)
             this%unit_normal_upper = [cos(angle_up),sin(angle_up)]
-            this%unit_normal_lower = [cos(angle_low), sin(angle_low)]
+            this%unit_normal_lower = [cos(angle_low),sin(angle_low)]
         end subroutine normal
 
         subroutine tangent(this, x)
@@ -392,8 +390,8 @@ module Potential_flows
             stag_points = this%stag_streams
             
             ! Pull last value of the forward stagnation streamline as a start loop value
-            y = stag_points(383, 2)
-            q = stag_points(383, 2)
+            y = stag_points(383, 2) ! adjust this so that you don't hard code this part in here.
+            q = stag_points(383, 2) ! adjust this so that you don't hard code this part in here. 
         
             ! Open the csv file for writing
             open(newunit=file_unit, file=file_path, status="replace")
